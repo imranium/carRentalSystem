@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('staff', function (Blueprint $table) {
+        Schema::create('cars', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone_number')->unique();
-            $table->boolean('is_admin')->default(false);
+            $table->string('brand');
+            $table->string('model');
+            $table->string('type'); 
+            $table->string('transmission');
+            $table->string('color');
+            $table->integer('year');
+            $table->decimal('daily_rate', 8, 2);
+            $table->string('plate_number')->unique();
             $table->foreignId('branch_id')->constrained('branches')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
@@ -28,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('staff');
+        Schema::dropIfExists('cars');
     }
 };

@@ -13,11 +13,7 @@ class Staff extends Model
 
     protected $fillable = [
         'user_id',
-        'name',
-        'email',
-        'phone_number',
         'branch_id',
-        'is_admin',
     ];
 
     public function branch()

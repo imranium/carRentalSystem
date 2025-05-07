@@ -11,9 +11,9 @@ class Customer extends Model
     use HasFactory, SoftDeletes;
     protected $fillable = [
         'user_id',
-        'name',
-        'email',
-        'phone_number',
+        'ic_number',
+        'driving_license_number',
+        'driving_license_expiry_date',
     ];
 
     public function bookings()

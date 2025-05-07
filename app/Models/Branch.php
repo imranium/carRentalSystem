@@ -18,4 +18,8 @@ class Branch extends Model
     public function staffs(){
         return $this->hasMany(Staff::class);
     }
+
+    public function cars(){
+        return $this->hasMany(Car::class);
+    }
 }

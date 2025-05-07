@@ -13,8 +13,11 @@ class Car extends Model
     protected $fillable = [
         'brand',
         'model',
-        'type',
-        'transmission',
+        'type', // e.g. SUV, sedan
+        'transmission', // e.g. automatic, manual
+        'color',
+        'year',
+        'daily_rate',
         'plate_number',
         'branch_id',
     ];
