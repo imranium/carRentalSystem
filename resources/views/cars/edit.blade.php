@@ -42,6 +42,21 @@
         </div>
 
         <div class="mb-3">
+            <label for="color" class="form-label">Color</label>
+            <input type="text" name="color" id="color" class="form-control" value="{{ old('color', $car->color) }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="year" class="form-label">Year</label>
+            <input type="number" name="year" id="year" class="form-control" value="{{ old('year', $car->year) }}" min="1900" max="{{ date('Y') }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="daily_rate" class="form-label">Daily Rate (RM)</label>
+            <input type="number" name="daily_rate" id="daily_rate" class="form-control" value="{{ old('daily_rate', $car->daily_rate) }}" step="0.01" required>
+        </div>
+
+        <div class="mb-3">
             <label for="plate_number" class="form-label">Plate Number</label>
             <input type="text" name="plate_number" id="plate_number" class="form-control" value="{{ old('plate_number', $car->plate_number) }}" required>
         </div>
@@ -53,4 +68,3 @@
     </form>
 </div>
 @endsection
-

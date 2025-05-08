@@ -51,9 +51,9 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
                     @else
-                        <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a></li>
+                        {{-- <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a></li> --}}
                         <li class="nav-item"><a class="nav-link" href="{{ route('cars.index') }}">Cars</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ route('bookings.index') }}">Bookings</a></li>
+                        {{-- <li class="nav-item"><a class="nav-link" href="{{ route('bookings.index') }}">Bookings</a></li> --}}
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf

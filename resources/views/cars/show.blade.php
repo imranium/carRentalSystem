@@ -2,22 +2,26 @@
 
 @section('content')
 <div class="container">
-    <h2 class="text-dark mb-4">Car Details</h2>
+    <h2 class="mb-4 text-dark">Car Details</h2>
 
-    <div class="card border-dark mb-4">
+    <div class="card shadow-sm">
         <div class="card-body">
-            <h4 class="card-title text-danger">{{ $car->brand }} {{ $car->model }}</h4>
-            <p class="card-text"><strong>Type:</strong> {{ $car->type }}</p>
-            <p class="card-text"><strong>Transmission:</strong> {{ $car->transmission }}</p>
-            <p class="card-text"><strong>Plate Number:</strong> {{ $car->plate_number }}</p>
-            <p class="card-text"><strong>Branch:</strong> {{ $car->branch->name }}</p>
+            <h4 class="card-title mb-3">{{ $car->brand }} {{ $car->model }}</h4>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Type:</strong> {{ $car->type }}</li>
+                <li class="list-group-item"><strong>Transmission:</strong> {{ $car->transmission }}</li>
+                <li class="list-group-item"><strong>Color:</strong> {{ $car->color }}</li>
+                <li class="list-group-item"><strong>Year:</strong> {{ $car->year }}</li>
+                <li class="list-group-item"><strong>Plate Number:</strong> {{ $car->plate_number }}</li>
+                <li class="list-group-item"><strong>Daily Rate:</strong> RM{{ number_format($car->daily_rate, 2) }}</li>
+                <li class="list-group-item"><strong>Branch:</strong> {{ $car->branch->name }}</li>
+            </ul>
         </div>
     </div>
 
-    <a href="{{ route('cars.index', ['branch_id' => $car->branch_id]) }}" class="btn btn-secondary">Back</a>
-    @can('update', $car)
-        <a href="{{ route('cars.edit', $car->id) }}" class="btn btn-danger">Edit</a>
-    @endcan
+    <div class="mt-4">
+        <a href="{{ route('cars.index', ['branch_id' => $car->branch_id]) }}" class="btn btn-secondary">Back to Cars</a>
+        <a href="{{ route('cars.edit', $car->id) }}" class="btn btn-warning">Edit Car</a>
+    </div>
 </div>
 @endsection
-

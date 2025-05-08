@@ -17,45 +17,52 @@
         <div class="alert alert-info">No cars found.</div>
     @else
         <div class="table-responsive">
-            <table class="table table-bordered align-middle">
+            <table class="table table-bordered table-striped bg-white">
                 <thead class="table-dark">
                     <tr>
+                        <th>Plate Number</th>
                         <th>Brand</th>
                         <th>Model</th>
                         <th>Type</th>
                         <th>Transmission</th>
-                        <th>Plate Number</th>
+                        <th>Color</th>
+                        <th>Year</th>
+                        <th>Daily Rate (RM)</th>
                         <th>Branch</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($cars as $car)
+                    @forelse ($cars as $car)
                         <tr>
+                            <td>{{ $car->plate_number }}</td>
                             <td>{{ $car->brand }}</td>
                             <td>{{ $car->model }}</td>
                             <td>{{ $car->type }}</td>
                             <td>{{ $car->transmission }}</td>
-                            <td>{{ $car->plate_number }}</td>
+                            <td>{{ $car->color }}</td>
+                            <td>{{ $car->year }}</td>
+                            <td>{{ number_format($car->daily_rate, 2) }}</td>
                             <td>{{ $car->branch->name ?? 'N/A' }}</td>
                             <td>
-                                <a href="{{ route('cars.show', $car->id) }}" class="btn btn-sm btn-outline-dark">View</a>
-                                @can('update', $car)
-                                    <a href="{{ route('cars.edit', $car->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                @endcan
-                                @can('delete', $car)
-                                    <form action="{{ route('cars.destroy', $car->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm btn-danger">Delete</button>
-                                    </form>
-                                @endcan
+                                <a href="{{ route('cars.show', $car->id) }}" class="btn btn-sm btn-info">View</a>
+                                <a href="{{ route('cars.edit', $car->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ route('cars.destroy', $car->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure to delete this car?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </form>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="10" class="text-center text-muted">No cars available.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     @endif
 </div>
 @endsection
+

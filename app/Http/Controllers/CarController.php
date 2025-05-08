@@ -10,7 +10,7 @@ class CarController extends Controller
 {
     public function index($branch_id = null)// if branch_id is null, show all cars
     {
-        //$this->authorize('viewAny', Car::class);
+        $this->authorize('viewAny', Car::class);
 
         $cars = $branch_id                      // if branch_id is provided, show cars for that branch
             ? Car::where('branch_id', $branch_id)->get()
@@ -19,28 +19,35 @@ class CarController extends Controller
         return view('cars.index', compact('cars'));
     }
 
-    public function create($branch_id)
+    public function create($branch_id = null)
     {
-        //$this->authorize('create', Car::class);
-
-        $branch = Branch::findOrFail($branch_id);
-        return view('cars.create', compact('branch'));
+        if ($branch_id) {
+            $branch = Branch::findOrFail($branch_id);
+            return view('cars.create', ['branch' => $branch, 'branches' => null]);
+        } else {
+            $branches = Branch::all(); // admin can select any
+            return view('cars.create', ['branch' => null, 'branches' => $branches]);
+        }
     }
+    
 
-    public function store(Request $request, $branch_id)
+    public function store(Request $request, $branch_id = null)
     {
-        //$this->authorize('create', Car::class);
+        $this->authorize('create', Car::class);
 
         $request->validate([
             'brand' => 'required|string|max:255',
             'model' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'transmission' => 'required|string|max:255',
+            'color' => 'required|string|max:255',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),  // Ensure the year is a valid integer
+            'daily_rate' => 'required|numeric|min:0',
             'plate_number' => 'required|string|max:255|unique:cars',
         ]);
 
         Car::create([
-            ...$request->only(['brand', 'model', 'type', 'transmission', 'plate_number']),
+            ...$request->only(['brand', 'model', 'type', 'transmission', 'color', 'year', 'daily_rate', 'plate_number']),
             'branch_id' => $branch_id,
         ]);
 
@@ -50,33 +57,36 @@ class CarController extends Controller
 
     public function show(Car $car)
     {
-        //$this->authorize('view', $car);
+        $this->authorize('view', $car);
 
         $car->load('branch');
         return view('cars.show', compact('car'));
     }
 
-    public function edit(Car $car)
+    public function edit(Car $car,)
     {
-        //$this->authorize('update', $car);
+        $this->authorize('update', $car);
 
-        //$car->load('branch');         
+        $car->load('branch');         
         return view('cars.edit', compact('car'));
     }
 
     public function update(Request $request, Car $car)
     {
-        //$this->authorize('update', $car);
+        $this->authorize('update', $car);
 
         $request->validate([
             'brand' => 'required|string|max:255',
             'model' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'transmission' => 'required|string|max:255',
+            'color' => 'required|string|max:255',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),  // Ensure the year is a valid integer
+            'daily_rate' => 'required|numeric|min:0',
             'plate_number' => 'required|string|max:255|unique:cars,plate_number,' . $car->id,
         ]);
 
-        $car->update($request->only(['brand', 'model', 'type', 'transmission', 'plate_number']));
+        $car->update($request->only(['brand', 'model', 'type', 'transmission', 'color', 'year', 'daily_rate', 'plate_number']));
 
         return redirect()->route('cars.index', ['branch_id' => $car->branch_id])
                          ->with('success', 'Car updated successfully.');
@@ -84,7 +94,7 @@ class CarController extends Controller
 
     public function destroy(Car $car)
     {
-        //$this->authorize('delete', $car);
+        $this->authorize('delete', $car);
 
         $branchId = $car->branch_id;
         $car->delete();
