@@ -2,64 +2,103 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $customers = Customer::with('user')->get();
+        return view('customers.index', compact('customers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('customers.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string',
+            'phone_number' => 'nullable|string|max:20',
+            'ic_number' => 'required|string|unique:customers',
+            'driver_license_number' => 'required|string|unique:customers',
+            'driver_license_expiry_date' => 'required|date|after:today',
+        ]);
+    
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->password, // plain text for now
+            'phone_number' => $request->phone_number,
+            'user_role' => 'customer',
+        ]);
+    
+        Customer::create([
+            'user_id' => $user->id,
+            'ic_number' => $request->ic_number,
+            'driver_license_number' => $request->driver_license_number,
+            'driver_license_expiry_date' => $request->driver_license_expiry_date,
+        ]);
+    
+        return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
+    
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Customer $customer)
     {
-        //
+        return view('customers.show', compact('customer'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Customer $customer)
     {
-        //
+        return view('customers.edit', compact('customer'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Customer $customer)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $customer->user->id,
+            'password' => 'nullable|string',
+            'phone_number' => 'nullable|string|max:20',
+            'ic_number' => 'required|string|unique:customers,ic_number,' . $customer->id,
+            'driver_license_number' => 'required|string|unique:customers,driver_license_number,' . $customer->id,
+            'driver_license_expiry_date' => 'required|date|after:today',
+        ]);
+    
+        $user = $customer->user; // Get the associated user
+    
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone_number = $request->phone_number;
+    
+        if ($request->filled('password')) {
+            $user->password = $request->password; // plain text
+        }
+    
+        $user->save();
+    
+        $customer->update([
+            'ic_number' => $request->ic_number,
+            'driver_license_number' => $request->driver_license_number,
+            'driver_license_expiry_date' => $request->driver_license_expiry_date,
+        ]);
+    
+        return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
     }
+    
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+        $customer->user->delete();
+
+        return redirect()->route('customers.index')->with('success', 'Customer deleted successfully.');
     }
 }
