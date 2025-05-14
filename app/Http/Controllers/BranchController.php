@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Branch;
 use Illuminate\Http\Request;
 
+// This controller handles the CRUD operations for branches
+
 class BranchController extends Controller
 {
     // List all branches

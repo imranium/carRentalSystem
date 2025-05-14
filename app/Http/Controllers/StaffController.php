@@ -7,12 +7,14 @@ use App\Models\Branch;
 use App\Models\Staff;
 use Illuminate\Http\Request;
 
+// only admin can access this controller 
+// this controller is for admin to manage staff and view all staffs
 class StaffController extends Controller
 {
     // Display list of all staff
     public function index()
     {
-        $staffs = User::where('role', 'staff')->with('branch')->get();
+        $staffs = Staff::with('user', 'branch')->get();
         return view('staffs.index', compact('staffs'));
     }
 
@@ -54,8 +56,16 @@ class StaffController extends Controller
     // Show staff details (optional)
     public function show($id)
     {
-        $staff = User::where('role', 'staff')->where('id', $id)->with('branch')->firstOrFail();
+
+        $staff = Staff::findOrFail($id);
         return view('staffs.show', compact('staff'));
+    }
+
+    public function edit($id)
+    {
+        $staff = Staff::findOrFail($id);
+        $branches = Branch::all();
+        return view('staffs.edit', compact('staff', 'branches'));
     }
 
     // Show form to edit staff
@@ -92,7 +102,7 @@ class StaffController extends Controller
     // Delete staff
     public function destroy($id)
     {
-        $staff = User::where('role', 'staff')->where('id', $id)->firstOrFail();
+        $staff = Staff::findOrFail($id);
         $staff->delete();
 
         return redirect()->route('staffs.index')->with('success', 'Staff deleted successfully.');

@@ -61,6 +61,48 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <label for="ic_number" class="col-md-4 col-form-label text-md-end">{{ __('IC Number') }}</label>
+                        
+                            <div class="col-md-6">
+                                <input id="ic_number" type="text" class="form-control @error('ic_number') is-invalid @enderror" name="ic_number" value="{{ old('ic_number') }}" required>
+                        
+                                @error('ic_number')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <label for="driving_license_number" class="col-md-4 col-form-label text-md-end">{{ __('Driving License No.') }}</label>
+                        
+                            <div class="col-md-6">
+                                <input id="driving_license_number" type="text" class="form-control @error('driving_license_number') is-invalid @enderror" name="driving_license_number" value="{{ old('driving_license_number') }}" required>
+                        
+                                @error('driving_license_number')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <label for="driving_license_expiry_date" class="col-md-4 col-form-label text-md-end">{{ __('License Expiry Date') }}</label>
+                        
+                            <div class="col-md-6">
+                                <input id="driving_license_expiry_date" type="date" class="form-control @error('driving_license_expiry_date') is-invalid @enderror" name="driving_license_expiry_date" value="{{ old('driving_license_expiry_date') }}" required>
+                        
+                                @error('driving_license_expiry_date')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+                        
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">

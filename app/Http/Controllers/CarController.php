@@ -3,57 +3,88 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 use App\Models\Branch;
+use Illuminate\Support\Facades\Auth;
 
+
+// This controller handles the CRUD operations for cars
 class CarController extends Controller
 {
-    public function index($branch_id = null)// if branch_id is null, show all cars
+    public function index()
     {
         $this->authorize('viewAny', Car::class);
+    
+        $user = Auth::user();
+        $staff = $user->staff; 
 
-        $cars = $branch_id                      // if branch_id is provided, show cars for that branch
-            ? Car::where('branch_id', $branch_id)->get()
-            : Car::all();
-
+        if ($user->isAdmin()) {
+            // Admin sees all cars
+            $cars = Car::all();
+        } else {
+            // Staff only sees cars from their branch
+            $cars = Car::where('branch_id', $staff->branch_id)->get();
+        }
+    
         return view('cars.index', compact('cars'));
     }
 
     public function create($branch_id = null)
     {
-        if ($branch_id) {
-            $branch = Branch::findOrFail($branch_id);
-            return view('cars.create', ['branch' => $branch, 'branches' => null]);
+        $user = Auth::user();
+        $staff = $user->staff; 
+
+        if ($user->isAdmin()) {
+            // Admin can add car to any branch
+            if ($branch_id) {
+                $branch = Branch::findOrFail($branch_id);
+                return view('cars.create', ['branch' => $branch, 'branches' => null]);
+            } else {
+                $branches = Branch::all(); // admin can select any
+                return view('cars.create', ['branch' => null, 'branches' => $branches]);
+            }
         } else {
-            $branches = Branch::all(); // admin can select any
-            return view('cars.create', ['branch' => null, 'branches' => $branches]);
+            // Staff: always use their own branch
+            $branch = Branch::findOrFail($staff->branch_id);
+            return view('cars.create', ['branch' => $branch, 'branches' => null]);
         }
     }
+
     
 
     public function store(Request $request, $branch_id = null)
     {
         $this->authorize('create', Car::class);
-
-        $request->validate([
+    
+        $user = Auth::user();
+        $staff = $user->staff; 
+    
+        $validated = $request->validate([
             'brand' => 'required|string|max:255',
             'model' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'transmission' => 'required|string|max:255',
             'color' => 'required|string|max:255',
-            'year' => 'required|integer|min:1900|max:' . date('Y'),  // Ensure the year is a valid integer
+            'year' => 'required|integer|min:1900|max:' . date('Y'),
             'daily_rate' => 'required|numeric|min:0',
             'plate_number' => 'required|string|max:255|unique:cars',
         ]);
-
-        Car::create([
-            ...$request->only(['brand', 'model', 'type', 'transmission', 'color', 'year', 'daily_rate', 'plate_number']),
-            'branch_id' => $branch_id,
-        ]);
-
-        return redirect()->route('cars.index', ['branch_id' => $branch_id])
+    
+        // Determine final branch_id
+        if ($user->isAdmin()) {
+            $validated['branch_id'] = $branch_id ?? $request->branch_id;
+        } else {
+            $validated['branch_id'] = $staff->branch_id; 
+        }
+    
+        Car::create($validated);
+    
+        return redirect()->route('cars.index')
                          ->with('success', 'Car created successfully.');
     }
+    
+    
 
     public function show(Car $car)
     {

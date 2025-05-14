@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Customer;
 
 class RegisterController extends Controller
 {
@@ -52,6 +53,9 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'ic_number' => ['required', 'string', 'max:20'],
+            'driving_license_number' => ['required', 'string', 'max:20'],
+            'driving_license_expiry_date' => ['required', 'date', 'after:today'],
         ]);
     }
 
@@ -63,10 +67,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    
+        Customer::create([
+            'user_id' => $user->id,
+            'ic_number' => $data['ic_number'],
+            'driver_license_number' => $data['driving_license_number'],
+            'driver_license_expiry_date' => $data['driving_license_expiry_date'],
+        ]);
+    
+        return $user;
     }
 }

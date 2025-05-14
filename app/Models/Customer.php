@@ -12,8 +12,8 @@ class Customer extends Model
     protected $fillable = [
         'user_id',
         'ic_number',
-        'driving_license_number',
-        'driving_license_expiry_date',
+        'driver_license_number',
+        'driver_license_expiry_date',
     ];
 
     public function bookings()

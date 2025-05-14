@@ -1,9 +1,18 @@
 @extends('layouts.layout')
 
+@php
+    $user = Auth::user();
+    $staff = $user->staff;
+    $branchId = $user->isAdmin() ? request('branch_id') : $staff->branch_id;
+    $branch = $branchId ? \App\Models\Branch::find($branchId) : null;
+@endphp
+
+
+
 @section('content')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-dark">Car Inventory</h2>
+        <h2 class="text-dark">Car Inventory @if($branch) of Branch {{ $branch->name }} @endif</h2>
         @can('create', App\Models\Car::class)
             <a href="{{ route('cars.create', ['branch_id' => request('branch_id')]) }}" class="btn btn-primary">+ Add Car</a>
         @endcan

@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 
+
+// this controller is for admin and staff to view all customers
 class CustomerController extends Controller
 {
     public function index()

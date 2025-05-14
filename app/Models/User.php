@@ -49,6 +49,7 @@ class User extends Authenticatable
         ];
     }
 
+
     public function isCustomer(): bool
     {
         return $this->user_role === 'customer';

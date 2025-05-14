@@ -1,8 +1,14 @@
 @extends('layouts.layout')
 
+@php
+    $user = Auth::user();
+    $branchId = $user->isAdmin() ? request('branch_id') : $user->branch_id;
+@endphp
+
 @section('content')
 <div class="container">
-    <h2 class="text-dark mb-4">Add New Car</h2>
+    <h2 class="text-dark mb-4">Add New Car @if($branch) to Branch {{ $branch->name }} @endif</h2>
+
 
     @if($errors->any())
         <div class="alert alert-danger">
@@ -76,6 +82,8 @@
                     @endforeach
                 </select>
             @endif
+        </div>
+        
         </div>
         
 
