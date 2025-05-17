@@ -83,10 +83,7 @@
                 </select>
             @endif
         </div>
-        
-        </div>
-        
-
+    
         <button type="submit" class="btn btn-danger">Add Car</button>
         <a href="{{ $branch ? route('cars.index', ['branch_id' => $branch->id]) : route('branches.index') }}" class="btn btn-secondary">Cancel</a>
 

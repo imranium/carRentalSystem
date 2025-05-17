@@ -11,6 +11,8 @@ class Staff extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'staff'; // <- Make sure this matches your table name exactly
+
     protected $fillable = [
         'user_id',
         'branch_id',

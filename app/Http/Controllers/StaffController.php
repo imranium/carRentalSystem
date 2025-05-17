@@ -14,6 +14,9 @@ class StaffController extends Controller
     // Display list of all staff
     public function index()
     {
+        $this->authorize('viewAny', Staff::class); // Only admin can view all staffs
+
+        // Fetch all staffs with their associated user and branch
         $staffs = Staff::with('user', 'branch')->get();
         return view('staffs.index', compact('staffs'));
     }
@@ -21,6 +24,7 @@ class StaffController extends Controller
     // Show form to create new staff
     public function create()
     {
+        $this->authorize('create', Staff::class); // Only admin can create staff
         $branches = Branch::all();
         return view('staffs.create', compact('branches'));
     }
@@ -28,6 +32,8 @@ class StaffController extends Controller
     // Store new staff
     public function store(Request $request)
     {
+        $this->authorize('create', Staff::class); // Only admin can create staff
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -56,6 +62,7 @@ class StaffController extends Controller
     // Show staff details (optional)
     public function show($id)
     {
+        $this->authorize('view', Staff::class); // Only admin can view staff details
 
         $staff = Staff::findOrFail($id);
         return view('staffs.show', compact('staff'));
@@ -63,6 +70,8 @@ class StaffController extends Controller
 
     public function edit($id)
     {
+        $this->authorize('update', Staff::class); // Only admin can edit staff
+
         $staff = Staff::findOrFail($id);
         $branches = Branch::all();
         return view('staffs.edit', compact('staff', 'branches'));
@@ -71,6 +80,8 @@ class StaffController extends Controller
     // Show form to edit staff
     public function update(Request $request, $id)
     {
+        $this->authorize('update', Staff::class); // Only admin can update staff
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
@@ -102,6 +113,8 @@ class StaffController extends Controller
     // Delete staff
     public function destroy($id)
     {
+        $this->authorize('delete', Staff::class); // Only admin can delete staff
+        
         $staff = Staff::findOrFail($id);
         $staff->delete();
 

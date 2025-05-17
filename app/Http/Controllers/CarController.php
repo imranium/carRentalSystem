@@ -17,15 +17,17 @@ class CarController extends Controller
         $this->authorize('viewAny', Car::class);
     
         $user = Auth::user();
-        $staff = $user->staff; 
-
+        $staff = $user->staff;
+        
         if ($user->isAdmin()) {
-            // Admin sees all cars
             $cars = Car::all();
-        } else {
-            // Staff only sees cars from their branch
+        } elseif ($staff) {
             $cars = Car::where('branch_id', $staff->branch_id)->get();
+        } else {
+            // Optional: handle customers or unassigned users
+            $cars = collect(); // Empty collection or redirect
         }
+        
     
         return view('cars.index', compact('cars'));
     }
@@ -127,10 +129,13 @@ class CarController extends Controller
     {
         $this->authorize('delete', $car);
 
-        $branchId = $car->branch_id;
+        $branchId = $car->branch_id; // CHAECK THIS
         $car->delete();
 
         return redirect()->route('cars.index', ['branch_id' => $branchId])
                          ->with('success', 'Car deleted.');
     }
+
+    //WHAT ????
 }
+

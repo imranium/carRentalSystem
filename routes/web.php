@@ -10,6 +10,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarBookingController;
 use App\Http\Controllers\CustomerBookingController;
+use App\Http\Controllers\DashboardController;
 
 
 
@@ -20,19 +21,6 @@ Route::get('/', function () {
 Auth::routes();
 
 //testing
-Route::resource('cars', CarController::class); // handle car inventory
-Route::resource('branches', BranchController::class); // handle branch management
-Route::resource('staffs', StaffController::class);  // handle staff management
-Route::resource('customers', CustomerController::class);  // handle customer management
-Route::get('/bookings/available', [CarBookingController::class, 'showAvailableCars'])->name('bookings.availableCars');  // 
-Route::post('/bookings/store', [CarBookingController::class, 'createBooking'])->name('bookings.store');
-
-Route::resource('bookings', BookingController::class)->only(['index', 'show']); // handle booking management
-Route::patch('bookings/{booking}/approve', [BookingController::class, 'approve'])->name('bookings.approve'); // handle booking approval
-Route::patch('bookings/{booking}/reject', [BookingController::class, 'reject'])->name('bookings.reject');   // handle booking rejection
-
-Route::get('/bookings/available', [CarBookingController::class, 'showAvailableCars'])->name('bookings.availableCars');  // 
-Route::post('/bookings/store', [CarBookingController::class, 'createBooking'])->name('bookings.store');
 
 
 
@@ -64,4 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/bookings/available', [CarBookingController::class, 'showAvailableCars'])->name('bookings.availableCars');  // 
     Route::post('/bookings/store', [CarBookingController::class, 'createBooking'])->name('bookings.store');
 
+    Route::get('/dashboard/admin', [DashboardController::class, 'adminDashboard'])->name('dashboard.admin');
+    Route::get('/dashboard/staff', [DashboardController::class, 'staffDashboard'])->name('dashboard.staff');
+    Route::get('/dashboard/customer', [DashboardController::class, 'customerDashboard'])->name('dashboard.customer');
 });

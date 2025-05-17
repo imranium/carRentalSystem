@@ -3,9 +3,10 @@
 @php
     $user = Auth::user();
     $staff = $user->staff;
-    $branchId = $user->isAdmin() ? request('branch_id') : $staff->branch_id;
+    $branchId = $user->isAdmin() ? request('branch_id') : ($staff?->branch_id ?? null);
     $branch = $branchId ? \App\Models\Branch::find($branchId) : null;
 @endphp
+
 
 
 

@@ -12,7 +12,8 @@ class BranchController extends Controller
     // List all branches
     public function index()
     {
-        // Optional: $this->authorize('viewAny', Branch::class);
+        $this->authorize('viewAny', Branch::class); // Only admin can view all branches
+
         $branches = Branch::all();
         return view('branches.index', compact('branches'));
     }
@@ -20,6 +21,7 @@ class BranchController extends Controller
     // Show create form
     public function create()
     {
+        $this->authorize('create', Branch::class); // Only admin can create branches
         // Optional: $this->authorize('create', Branch::class);
         return view('branches.create');
     }
@@ -27,6 +29,8 @@ class BranchController extends Controller
     // Store new branch
     public function store(Request $request)
     {
+        $this->authorize('create', Branch::class); // Only admin can create branches
+
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
@@ -40,13 +44,15 @@ class BranchController extends Controller
     // Show edit form
     public function edit(Branch $branch)
     {
-        // Optional: $this->authorize('update', $branch);
+        $this->authorize('update', $branch); // Only admin can edit branches
         return view('branches.edit', compact('branch'));
     }
 
     // Update branch
     public function update(Request $request, Branch $branch)
     {
+        $this->authorize('update', $branch); // Only admin can update branches
+
         $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
@@ -60,7 +66,8 @@ class BranchController extends Controller
     // Delete branch
     public function destroy(Branch $branch)
     {
-        // Optional: $this->authorize('delete', $branch);
+        $this->authorize('delete', $branch);
+        
         $branch->delete();
 
         return redirect()->route('branches.index')->with('success', 'Branch deleted.');

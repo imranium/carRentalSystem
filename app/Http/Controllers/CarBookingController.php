@@ -140,13 +140,13 @@ class CarBookingController extends Controller
             ->get()
             ->sum('cars_count');
     
+        // Check if the total number of cars exceeds the limit
         if ($overlappingCarCount + count($carIds) > 2) {
             return back()->withErrors([
                 'car_ids' => 'Booking exceeds the 2-car limit for the selected period.'
             ])->withInput();
         }
             
-    
         // Create booking and attach cars
         DB::beginTransaction();
         try {

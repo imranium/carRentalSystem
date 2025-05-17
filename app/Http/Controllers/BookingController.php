@@ -20,7 +20,12 @@ class BookingController extends Controller
     // Admin: all bookings | Staff: branch-specific
     public function index()
     {
-        $user = Auth::user();
+        $user = Auth::user()->load('staff');
+        $staff = $user->staff;
+
+        
+    //dd(Auth::id(), Auth::user()->email, \App\Models\Staff::where('user_id', Auth::id())->withTrashed()->first());
+
 
         if ($user->isAdmin()) {
             $bookings = Booking::with('customer', 'cars')->latest()->get();
