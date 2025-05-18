@@ -20,13 +20,13 @@
             <p class="mb-2"><strong>Role:</strong> {{ ucfirst($staff->user->user_role) }}</p>
 
             <div class="mt-4">
-                <a href="{{ route('staffs.edit', $staff->id) }}" class="btn btn-warning">Edit</a>
+                <a href="{{ route('staffs.edit', $staff->id) }}" class="btn btn-warning btn-lg">Edit</a>
                 <form action="{{ route('staffs.destroy', $staff->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure to delete this staff?')">
                     @csrf
                     @method('DELETE')
-                    <button class="btn btn-sm btn-danger">Delete</button>
+                    <button class="btn btn-lg btn-danger">Delete</button>
                 </form>
-                <a href="{{ route('staffs.index') }}" class="btn btn-secondary">Back</a>
+                <a href="{{ route('staffs.index') }}" class="btn btn-secondary btn-lg">Back</a>
             </div>
         </div>
     </div>

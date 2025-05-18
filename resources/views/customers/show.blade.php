@@ -19,6 +19,42 @@
             </div>
         </div>
     </div>
+
+    <h3 class="mt-4">Bookings</h3>
+
+        @if ($customer->bookings->isEmpty())
+            <p>No bookings found.</p>
+        @else
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Car</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($customer->bookings as $booking)
+                        <tr>
+                            <td>{{ $booking->id }}</td>
+                            <td>
+                                <ul>
+                                    @foreach ($booking->cars as $car)
+                                        <li>{{ $car->brand }} {{ $car->model }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                            <td>{{ \Carbon\Carbon::parse($booking->start_date)->format('d M Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($booking->end_date)->format('d M Y') }}</td>
+                            <td>{{ ucfirst($booking->status) }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+
 </div>
 @endsection
 

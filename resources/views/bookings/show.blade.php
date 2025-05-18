@@ -27,6 +27,7 @@
             <p><strong>Name:</strong> {{ $booking->customer->user->name }}</p>
             <p><strong>Email:</strong> {{ $booking->customer->user->email }}</p>
             <p><strong>Driver License Number:</strong> {{ $booking->customer->driver_license_number }}</p>
+            <p><strong>License Expiry Date:</strong> {{ $booking->customer->driver_license_expiry_date->format('d M Y') }}</p>
         </div>
     </div>
 

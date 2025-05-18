@@ -10,7 +10,7 @@
             <div class="card text-white bg-primary shadow">
                 <div class="card-body">
                     <h5>My Branch</h5>
-                    <h3>{{ $branch->location ?? 'N/A' }}</h3>
+                    <h3>{{ $branch->name ?? 'N/A' }}</h3>
                 </div>
             </div>
         </div>

@@ -46,7 +46,7 @@
                             </td>
                             <td>
                                 <span class="badge 
-                                    @if($booking->status == 'approved') bg-success
+                                    @if($booking->status == 'confirmed') bg-success
                                     @elseif($booking->status == 'pending') bg-warning text-dark
                                     @elseif($booking->status == 'cancelled') bg-danger
                                     @else bg-secondary

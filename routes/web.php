@@ -11,6 +11,7 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CarBookingController;
 use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CustomerProfileController;
 
 
 
@@ -55,4 +56,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/admin', [DashboardController::class, 'adminDashboard'])->name('dashboard.admin');
     Route::get('/dashboard/staff', [DashboardController::class, 'staffDashboard'])->name('dashboard.staff');
     Route::get('/dashboard/customer', [DashboardController::class, 'customerDashboard'])->name('dashboard.customer');
+
+    Route::get('/profile', [CustomerProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [CustomerProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [CustomerProfileController::class, 'update'])->name('profile.update');
 });

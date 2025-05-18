@@ -16,6 +16,10 @@ class Customer extends Model
         'driver_license_expiry_date',
     ];
 
+    protected $casts = [
+        'driver_license_expiry_date' => 'datetime',
+    ];
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Branch;
 use App\Models\Staff;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 // only admin can access this controller 
 // this controller is for admin to manage staff and view all staffs
@@ -25,6 +26,7 @@ class StaffController extends Controller
     public function create()
     {
         $this->authorize('create', Staff::class); // Only admin can create staff
+
         $branches = Branch::all();
         return view('staffs.create', compact('branches'));
     }
@@ -37,15 +39,14 @@ class StaffController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:4',
             'branch_id' => 'required|exists:branches,id'
         ]);
 
-// Create the user
+        // Create the user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password, // not hashed for now
+            'password' => Hash::make('12345678'), // default password when creating staff
             'phone_number' => $request->phone_number,
             'user_role' => 'staff',
         ]);
@@ -59,7 +60,7 @@ class StaffController extends Controller
         return redirect()->route('staffs.index')->with('success', 'Staff created successfully.');
     }
 
-    // Show staff details (optional)
+    // Show staff details
     public function show($id)
     {
         $this->authorize('view', Staff::class); // Only admin can view staff details
@@ -85,7 +86,6 @@ class StaffController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email',
-            'password' => 'required|string|min:6', // plaintext for now
             'phone_number' => 'nullable|string',
             'branch_id' => 'required|exists:branches,id',
         ]);
@@ -98,7 +98,6 @@ class StaffController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password, // Not hashed
             'phone_number' => $request->phone_number,
         ]);
 

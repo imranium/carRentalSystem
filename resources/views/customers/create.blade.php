@@ -33,8 +33,8 @@
         </div>
 
         <div class="mb-3">
-            <label for="password" class="form-label">Password (will be visible)</label>
-            <input type="text" name="password" class="form-control" value="{{ old('password') }}" required>
+            <label for="password" class="form-label">Password (Read-Only)</label>
+            <input type="text" name="password" id="password" class="form-control" value="12345678" readonly>
         </div>
 
         <div class="mb-3">

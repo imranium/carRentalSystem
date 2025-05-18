@@ -48,13 +48,49 @@ class BookingController extends Controller
     }
 
     // Approve a booking
-    public function approve(Booking $booking)
+        public function approve(Booking $booking)
+    {
+        $this->authorize('update', $booking);
+
+        // Only proceed if currently pending
+        if ($booking->status !== 'pending') {
+            return back()->with('error', 'Only pending bookings can be confirmed.');
+        }
+
+        $start = $booking->start_date;
+        $end = $booking->end_date;
+
+        foreach ($booking->cars as $car) {
+            $hasOverlap = $car->bookings()
+                ->where('status', 'confirmed') // Only check against confirmed bookings
+                ->where(function ($query) use ($start, $end) {
+                    $query->whereBetween('start_date', [$start, $end])
+                        ->orWhereBetween('end_date', [$start, $end])
+                        ->orWhere(function ($q) use ($start, $end) {
+                            $q->where('start_date', '<=', $start)
+                                ->where('end_date', '>=', $end);
+                        });
+                })
+                ->exists();
+
+            if ($hasOverlap) {
+                return back()->with('error', "Car '{$car->name}' is already booked for these dates.");
+            }
+        }
+
+        $booking->update(['status' => 'confirmed']); 
+
+        return back()->with('success', 'Booking confirmed successfully.');
+    }
+
+
+/*     public function approve(Booking $booking)
     {
         $this->authorize('update', $booking);
 
         $booking->update(['status' => 'confirmed']); 
         return back()->with('success', 'Booking approved.');
-    }
+    } */
 
     // Reject a booking
     public function reject(Booking $booking)

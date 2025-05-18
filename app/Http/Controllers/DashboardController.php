@@ -7,13 +7,20 @@ use App\Models\Branch;
 use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Http\Request;
 
+
+// This controller handles the dashboard views for different user roles
 class DashboardController extends Controller
 {
+    
         public function adminDashboard()
     {
+        $this->authorize('access-admin-dashboard', Auth::user());
+
+        // Check if the user is an admin
         return view('dashboard.admin', [
             'totalBookings' => Booking::count(),
             'totalCars' => Car::count(),
@@ -26,6 +33,9 @@ class DashboardController extends Controller
 
     public function staffDashboard()
     {
+        $this->authorize('access-staff-dashboard', Auth::user());
+
+
         $user = Auth::user();
         $staff = $user->staff;
     
@@ -41,6 +51,9 @@ class DashboardController extends Controller
 
         public function customerDashboard()
     {
+        $this->authorize('access-customer-dashboard', Auth::user());
+
+
         $user = Auth::user();
         $bookings = $user->customer->bookings()
             ->with(['cars', 'branch'])

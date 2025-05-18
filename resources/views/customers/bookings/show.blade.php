@@ -13,11 +13,11 @@
         <div class="card-body">
             <h5 class="card-title">Booking Summary</h5>
             <p><strong>Booking Period:</strong> {{ \Carbon\Carbon::parse($booking->start_date)->format('d M Y') }} to {{ \Carbon\Carbon::parse($booking->end_date)->format('d M Y') }}</p>
-            <p><strong>Total Rental Days:</strong> {{ \Carbon\Carbon::parse($booking->start_date)->diffInDays($booking->end_date) }} day(s)</p>
+            <p><strong>Total Rental Days:</strong> {{ \Carbon\Carbon::parse($booking->start_date)->diffInDays($booking->end_date) + 1}} day(s)</p>
             <p><strong>Branch:</strong> {{ $booking->branch->name ?? 'N/A' }}</p>
             <p><strong>Status:</strong> <span class="badge 
                 @if($booking->status === 'pending') bg-warning
-                @elseif($booking->status === 'approved') bg-success
+                @elseif($booking->status === 'confirmed') bg-success
                 @elseif($booking->status === 'cancelled') bg-danger
                 @else bg-secondary
                 @endif">

@@ -19,7 +19,6 @@
                 <th>Email</th>
                 <th>Phone Number</th>
                 <th>Branch</th>
-                <th>Password</th> 
                 <th>Actions</th>
             </tr>
         </thead>
@@ -30,7 +29,6 @@
                     <td>{{ $staff->user->email }}</td>
                     <td>{{ $staff->user->phone_number ?? '-' }}</td>
                     <td>{{ $staff->branch->name ?? 'Unassigned' }}</td>
-                    <td>{{ $staff->user->password }}</td>
                     <td>
                         <a href="{{ route('staffs.show', $staff->id) }}" class="btn btn-sm btn-info">View</a>
                         <a href="{{ route('staffs.edit', $staff->id) }}" class="btn btn-sm btn-warning">Edit</a>

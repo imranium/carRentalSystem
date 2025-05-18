@@ -33,7 +33,7 @@ class CustomerBookingController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $days = Carbon::parse($booking->start_date)->diffInDays($booking->end_date);
+        $days = Carbon::parse($booking->start_date)->diffInDays($booking->end_date) + 1;
         $totalPayment = $booking->cars->sum(fn($car) => $car->daily_rate * $days);
     
         return view('customers.bookings.show', compact('booking', 'days', 'totalPayment'));

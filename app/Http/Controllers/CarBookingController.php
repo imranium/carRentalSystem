@@ -27,23 +27,25 @@ class CarBookingController extends Controller
         if ($request->filled(['start_date', 'end_date'])) {
             $request->validate([
                 'start_date' => 'required|date|after_or_equal:today',
-                'end_date' => 'required|date|after:start_date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+
             ]);
 
-        // Custom validation: at least 2 days in advance
-        if (Carbon::parse($startDate)->lt(now()->addDays(2))) {
-            return back()->withErrors(['start_date' => 'Bookings must be made at least 2 days in advance.'])->withInput();
-        }
-    
+            // Custom validation: at least 2 days in advance
+            if (Carbon::parse($startDate)->lt(now()->addDays(2))) {
+                return back()->withErrors(['start_date' => 'Bookings must be made at least 2 days in advance.'])->withInput();
+            }
+        
             $query->whereDoesntHave('bookings', function ($q) use ($startDate, $endDate) {
-                $q->where(function ($subQ) use ($startDate, $endDate) {
-                    $subQ->whereBetween('start_date', [$startDate, $endDate])
-                         ->orWhereBetween('end_date', [$startDate, $endDate])
-                         ->orWhere(function ($q2) use ($startDate, $endDate) {
-                             $q2->where('start_date', '<=', $startDate)
-                                ->where('end_date', '>=', $endDate);
-                         });
-                });
+                $q->where('status', 'confirmed') // Only block confirmed bookings
+                  ->where(function ($subQ) use ($startDate, $endDate) {
+                      $subQ->whereBetween('start_date', [$startDate, $endDate])
+                           ->orWhereBetween('end_date', [$startDate, $endDate])
+                           ->orWhere(function ($q2) use ($startDate, $endDate) {
+                               $q2->where('start_date', '<=', $startDate)
+                                  ->where('end_date', '>=', $endDate);
+                           });
+                  });
             });
         }
     

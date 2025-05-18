@@ -46,6 +46,8 @@
                     <option value="">All Types</option>
                     <option value="SUV" {{ request('type') == 'SUV' ? 'selected' : '' }}>SUV</option>
                     <option value="Sedan" {{ request('type') == 'Sedan' ? 'selected' : '' }}>Sedan</option>
+                    <option value="Hatchback" {{ request('type') == 'Hatchback' ? 'selected' : '' }}>Hatchback</option>
+                    <option value="MPV" {{ request('type') == 'MPV' ? 'selected' : '' }}>MPV</option>
                 </select>
             </div>
 
@@ -101,13 +103,78 @@
             </div>
 
             <div class="mt-4">
-                <button type="submit" class="btn btn-success">Confirm Booking (Max 2 Cars)</button>
+                <button type="button" class="btn btn-success" id="reviewBookingBtn">
+                    Confirm Booking (Max 2 Cars)
+                </button>                
             </div>
+                            <!-- Booking Confirmation Modal -->
+        <div class="modal fade" id="confirmBookingModal" tabindex="-1" aria-labelledby="confirmBookingLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="confirmBookingLabel">Review Your Booking</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <p><strong>Booking Period:</strong> <span id="reviewStartDate"></span> to <span id="reviewEndDate"></span></p>
+                <div id="selectedCarsReview"></div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+                <button type="submit" class="btn btn-primary" id="finalSubmitBtn">Confirm & Submit</button>
+                </div>
+            </div>
+            </div>
+        </div>
         </form>
+
+
+  
+  
     @else
         <div class="alert alert-info mt-4">
             No cars available for the selected period and filters.
         </div>
     @endif
+
+    
 </div>
+        <script>
+            document.getElementById('reviewBookingBtn').addEventListener('click', function () {
+                const checkboxes = document.querySelectorAll('input[name="car_ids[]"]:checked');
+                const carCards = document.querySelectorAll('input[name="car_ids[]"]');
+                const selectedCarsReview = document.getElementById('selectedCarsReview');
+                const startDate = document.querySelector('input[name="start_date"]').value;
+                const endDate = document.querySelector('input[name="end_date"]').value;
+            
+                if (checkboxes.length === 0) {
+                    alert("Please select at least one car to book.");
+                    return;
+                }
+            
+                if (checkboxes.length > 2) {
+                    alert("You can only book a maximum of 2 cars.");
+                    return;
+                }
+            
+                // Populate modal data
+                document.getElementById('reviewStartDate').textContent = startDate;
+                document.getElementById('reviewEndDate').textContent = endDate;
+            
+                let output = '<ul>';
+                checkboxes.forEach(cb => {
+                    const card = cb.closest('.card-body');
+                    const carName = cb.nextSibling.textContent.trim();
+                    output += `<li><strong>${carName}</strong><br>${card.querySelector('.card-text').innerHTML}</li><hr>`;
+                });
+                output += '</ul>';
+            
+                selectedCarsReview.innerHTML = output;
+            
+                // Show modal
+                let modal = new bootstrap.Modal(document.getElementById('confirmBookingModal'));
+                modal.show();
+            });
+        </script>
 @endsection
+

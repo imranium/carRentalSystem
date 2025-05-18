@@ -48,7 +48,7 @@
     <!-- Footer -->
     <footer class="footer mt-auto">
         <div class="container">
-            <p class="mb-0">&copy; {{ date('Y') }} ECE CarBooking - SW01082892 Sdn. Bhd. | 1985 |All rights reserved.</p>
+            <p class="mb-0"> ECE CarBooking - SW01082892 Sdn. Bhd. | 2025 | All rights reserved.</p>
         </div>
     </footer>
 

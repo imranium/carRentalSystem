@@ -11,7 +11,7 @@ class StaffPolicy
         return $user->isAdmin();
     }
 
-    public function view(User $user, Staff $staff): bool
+    public function view(User $user): bool
     {
         return $user->isAdmin();
     }
@@ -21,12 +21,12 @@ class StaffPolicy
         return $user->isAdmin();
     }
 
-    public function update(User $user, Staff $staff): bool
+    public function update(User $user): bool
     {
         return $user->isAdmin();
     }
 
-    public function delete(User $user, Staff $staff): bool
+    public function delete(User $user): bool
     {
         return $user->isAdmin();
     }

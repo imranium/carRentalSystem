@@ -34,11 +34,6 @@
         </div>
 
         <div class="mb-3">
-            <label for="password" class="form-label">Password (visible)</label>
-            <input type="text" name="password" id="password" class="form-control" placeholder="Leave blank to keep current password">
-        </div>
-
-        <div class="mb-3">
             <label for="branch_id" class="form-label">Assign Branch</label>
             <select name="branch_id" id="branch_id" class="form-select" required>
                 <option value="">-- Select Branch --</option>

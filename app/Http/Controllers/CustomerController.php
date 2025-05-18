@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Gate;
 
 
 // this controller is for admin and staff to view all customers
@@ -12,17 +14,27 @@ class CustomerController extends Controller
 {
     public function index()
     {
+        if (Gate::denies('view-all-customers')) {
+            abort(403, 'Unauthorized');
+        }
         $customers = Customer::with('user')->get();
         return view('customers.index', compact('customers'));
     }
 
     public function create()
     {
+        if (Gate::denies('create-customer')) {
+            abort(403, 'Unauthorized');
+        }
         return view('customers.create');
     }
 
     public function store(Request $request)
-    {
+    { 
+        if (Gate::denies('create-customer')) {
+            abort(403, 'Unauthorized');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
@@ -36,7 +48,7 @@ class CustomerController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password, // plain text for now
+            'password' => Hash::make('12345678'), // plain text for now
             'phone_number' => $request->phone_number,
             'user_role' => 'customer',
         ]);
@@ -54,16 +66,27 @@ class CustomerController extends Controller
 
     public function show(Customer $customer)
     {
+
+        if (Gate::denies('view-customer')) {
+            abort(403, 'Unauthorized');
+        }
+
+        $customer->load('bookings'); // eager load bookings
         return view('customers.show', compact('customer'));
     }
 
     public function edit(Customer $customer)
     {
+        $this->authorize('update', $customer);
         return view('customers.edit', compact('customer'));
     }
 
     public function update(Request $request, Customer $customer)
     {
+        if (Gate::denies('update-customer')) {
+            abort(403, 'Unauthorized');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $customer->user->id,
@@ -98,6 +121,10 @@ class CustomerController extends Controller
 
     public function destroy(Customer $customer)
     {
+        if (Gate::denies('delete-customer')) {
+            abort(403, 'Unauthorized');
+        }
+
         $customer->delete();
         $customer->user->delete();
 
